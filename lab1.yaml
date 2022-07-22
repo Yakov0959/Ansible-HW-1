@@ -1,0 +1,68 @@
+---
+
+- name: Add repository
+  hosts: env
+  become: yes
+
+  tasks:
+  - name: install epel
+    yum:
+      name: epel-release
+      state: latest
+
+
+- name: Install apache 
+  hosts: app
+  become: yes
+  tasks: 
+  - name: Install apache packages 
+    yum:
+      name: httpd
+      state: latest
+  - name: Enable service httpd
+    service:
+      name: httpd
+      enabled: yes
+
+- name: Install MySQL
+  hosts: db
+  become: yes
+  
+  tasks:
+  - name: install mysql
+    yum:
+      name: mariadb-server
+      state: latest
+  - name: mariadb enable and start
+    service: 
+      name: mariadb
+      state: started
+      enabled: yes
+  - name: Install python3-pip
+    yum:
+      name: python3-pip
+      state: present
+  - name: Install MySQL-python
+    yum:
+      name: MySQL-python
+      state: present
+  - name: Create a new database with name 'test'
+    mysql_db:
+      name: test
+      state: present
+
+- name: Add user,group
+  hosts: env
+  become: yes
+  tasks:
+  - name: add group
+    group:
+      name: hillel
+      state: present
+  - name: Add user 
+    user:
+      name: student
+      password: student_pass
+      groups: hillel,wheel
+
+

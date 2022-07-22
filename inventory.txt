@@ -1,0 +1,7 @@
+[app]
+vm01 ansible_host=192.168.0.40
+[db] 
+vm02 ansible_host=192.168.0.42 
+[env:children]
+app
+db
